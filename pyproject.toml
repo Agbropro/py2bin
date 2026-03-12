@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=40", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "py2bin"
+version = "0.1.0"
+description = "Bundle a Python project into a self-contained native binary (pyz → xxd -i → gcc)"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+keywords = ["binary", "compiler", "pyz", "zipapp", "distribution"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: System :: Software Distribution",
+]
+
+# No external runtime dependencies — stdlib only
+dependencies = []
+
+[project.scripts]
+py2bin = "py2bin.main:main"
+
+[tool.setuptools.packages.find]
+# The repo root IS the py2bin package.
+# Setuptools looks one level up (the parent of this directory) and finds
+# the "py2bin" folder (the cloned repo itself).
+where = [".."]
+include = ["py2bin*"]
