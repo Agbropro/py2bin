@@ -2,6 +2,8 @@
 
 **Bundle a Python project into a self-contained native binary.**
 
+Original idea and design by [@SigmoidBabe](https://github.com/SigmoidBabe) — this library is a packaged implementation of their concept.
+
 ```
 your_project/ .py files
        │
@@ -129,6 +131,12 @@ py2bin/
     ├── converter.py         ← XxdConverter
     └── compiler.py          ← CCompiler
 ```
+
+---
+
+## Credits
+
+Original idea and design by [@SigmoidBabe](https://github.com/SigmoidBabe) — this library is a packaged implementation of their concept.
 
 ---
 
