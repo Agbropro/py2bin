@@ -2,7 +2,7 @@
 
 **Bundle a Python project into a self-contained native binary.**
 
-Original idea and design by [@SigmoidBabe](https://github.com/SigmoidBabe) — this library is a packaged implementation of their concept.
+Original idea and design by [@dhonanhibatullah](https://github.com/dhonanhibatullah) & [@SigmoidBabe](https://github.com/SigmoidBabe) — this library is a packaged implementation of their concept.
 
 ```
 your_project/ .py files
