@@ -29,9 +29,18 @@ dependencies = []
 [project.scripts]
 py2bin = "py2bin.main:main"
 
-[tool.setuptools.packages.find]
+[tool.setuptools]
+packages = [
+    "py2bin",
+    "py2bin.schemas",
+    "py2bin.interfaces",
+    "py2bin.infrastructure",
+]
+
+[tool.setuptools.package-dir]
 # The repo root IS the py2bin package.
-# Setuptools looks one level up (the parent of this directory) and finds
-# the "py2bin" folder (the cloned repo itself).
-where = [".."]
-include = ["py2bin*"]
+# py2bin        → ./          (picks up __init__.py, main.py, pipeline.py)
+# py2bin.schemas     → ./schemas/
+# py2bin.interfaces  → ./interfaces/
+# py2bin.infrastructure → ./infrastructure/
+"py2bin" = "."

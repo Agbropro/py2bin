@@ -1,2 +1,5 @@
 *.pyc
 *__pycache__
+.venv
+
+py2bin.egg-info
