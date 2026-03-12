@@ -36,13 +36,13 @@ runtime, then ``execvp``s ``python3`` to run it — no extra runtime packaging n
 ### From GitHub (recommended)
 
 ```bash
-pip install git+https://github.com/YOUR_USERNAME/py2bin.git
+pip install git+https://github.com/Agbropro/py2bin.git
 ```
 
 ### Editable / development install
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/py2bin.git
+git clone https://github.com/Agbropro/py2bin.git
 cd py2bin/..          # go to the PARENT of the cloned folder
 pip install -e py2bin
 ```
