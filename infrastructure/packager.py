@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import io
 import zipfile
 from pathlib import Path
 
@@ -22,8 +23,9 @@ class PyzPackager(IPackager):
         The zip entry ``__main__.py`` is used by Python as the entry point when
         the archive is run with ``python3 <archive>.pyz``.  If the user's
         entry script is already named ``__main__.py`` it is used as-is;
-        otherwise a thin ``__main__.py`` shim is generated that simply
-        executes the requested entry script.
+        otherwise a thin ``__main__.py`` shim is generated using
+        ``runpy.run_module()``, which is zip-aware and does not try to
+        open files as filesystem paths.
 
         Args:
             config: Build configuration.
@@ -54,26 +56,25 @@ class PyzPackager(IPackager):
         py_files: list[Path] = sorted(project_dir.rglob("*.py"))
 
         # Build raw zip in memory then prepend shebang
-        import io
-
         buf = io.BytesIO()
         with zipfile.ZipFile(buf, mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
             for py_file in py_files:
                 arcname = py_file.relative_to(project_dir)
                 zf.write(py_file, arcname)
 
-            # If the entry is not __main__.py, inject a shim so Python runs it
+            # If the entry is not __main__.py, inject a shim so Python runs it.
+            #
+            # CRITICAL: use runpy.run_module(), NOT open() / exec().
+            # The .pyz is a zip archive; Python's zipimport handles module
+            # imports from it correctly.  Doing open('/tmp/foo.pyz/calon.py')
+            # fails with NotADirectoryError because the .pyz is a file, not
+            # a directory — you cannot treat paths inside it like filesystem
+            # paths.
             if entry_script != "__main__.py":
                 module_name = Path(entry_script).stem
                 shim = (
-                    f"import runpy\n"
-                    f"runpy.run_path('__py2bin_entry__/{entry_script}', run_name='__main__')\n"
-                )
-                # Actually: simplest shim – just execfile the script by path
-                shim = (
-                    "import sys, os\n"
-                    f"_entry = os.path.join(os.path.dirname(__file__) or '.', {entry_script!r})\n"
-                    "exec(open(_entry).read(), {'__file__': _entry, '__name__': '__main__'})\n"
+                    "import runpy\n"
+                    f"runpy.run_module({module_name!r}, run_name='__main__', alter_sys=True)\n"
                 )
                 if "__main__.py" not in [f.name for f in py_files]:
                     zf.writestr("__main__.py", shim)
